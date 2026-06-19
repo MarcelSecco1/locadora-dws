@@ -48,4 +48,3 @@ http://localhost
 
 - O Node está instalado dentro do container principal da aplicação.
 - A aplicação sobe na porta 80 via Nginx.
-- O deploy em AWS EC2 foi intencionalmente não incluído, conforme pedido.
