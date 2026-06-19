@@ -35,12 +35,6 @@ Route::get('/dashboard', function () {
     ]);
 })->middleware(['auth', 'permission:acessar dashboard'])->name('dashboard');
 
-Route::get('/veiculos', [VeiculoController::class, 'index'])->name('veiculos.index');
-Route::get('/veiculos/{veiculo}', [VeiculoController::class, 'show'])->name('veiculos.show');
-
-Route::get('/locacoes', [LocacaoController::class, 'index'])->name('locacoes.index');
-Route::get('/locacoes/{locacao}', [LocacaoController::class, 'show'])->name('locacoes.show');
-
 Route::middleware(['auth', 'permission:gerenciar veiculos'])->group(function () {
     Route::get('/veiculos/criar', [VeiculoController::class, 'create'])->name('veiculos.create');
     Route::post('/veiculos', [VeiculoController::class, 'store'])->name('veiculos.store');
@@ -49,6 +43,9 @@ Route::middleware(['auth', 'permission:gerenciar veiculos'])->group(function () 
     Route::delete('/veiculos/{veiculo}', [VeiculoController::class, 'destroy'])->name('veiculos.destroy');
 });
 
+Route::get('/veiculos', [VeiculoController::class, 'index'])->name('veiculos.index');
+Route::get('/veiculos/{veiculo}', [VeiculoController::class, 'show'])->name('veiculos.show');
+
 Route::middleware(['auth', 'permission:gerenciar locacoes'])->group(function () {
     Route::get('/locacoes/criar', [LocacaoController::class, 'create'])->name('locacoes.create');
     Route::post('/locacoes', [LocacaoController::class, 'store'])->name('locacoes.store');
@@ -56,6 +53,9 @@ Route::middleware(['auth', 'permission:gerenciar locacoes'])->group(function () 
     Route::put('/locacoes/{locacao}', [LocacaoController::class, 'update'])->name('locacoes.update');
     Route::delete('/locacoes/{locacao}', [LocacaoController::class, 'destroy'])->name('locacoes.destroy');
 });
+
+Route::get('/locacoes', [LocacaoController::class, 'index'])->name('locacoes.index');
+Route::get('/locacoes/{locacao}', [LocacaoController::class, 'show'])->name('locacoes.show');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit');

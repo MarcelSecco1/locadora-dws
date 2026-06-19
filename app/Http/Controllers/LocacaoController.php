@@ -63,8 +63,11 @@ class LocacaoController extends Controller
         return view('locacoes.edit', [
             'locacao' => $locacao,
             'veiculos' => Veiculo::query()
-                ->where('status', 'disponivel')
-                ->orWhereKey($locacao->veiculo_id)
+                ->where(function ($query) use ($locacao) {
+                    $query
+                        ->where('status', 'disponivel')
+                        ->orWhere('id', $locacao->veiculo_id);
+                })
                 ->orderBy('modelo')
                 ->get(),
         ]);
