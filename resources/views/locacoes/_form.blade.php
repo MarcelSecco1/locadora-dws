@@ -15,7 +15,7 @@
             <option value="">Selecione um veículo</option>
             @foreach ($veiculos as $veiculoItem)
                 <option value="{{ $veiculoItem->id }}" @selected((string) old('veiculo_id', $locacaoAtual->veiculo_id ?? '') === (string) $veiculoItem->id)>
-                    {{ $veiculoItem->modelo }} - {{ $veiculoItem->placa }} ({{ ucfirst($veiculoItem->status) }})
+                    {{ $veiculoItem->modelo }} - {{ $veiculoItem->placa }} ({{ $veiculoItem->status_hoje_label }})
                 </option>
             @endforeach
         </x-select-input>

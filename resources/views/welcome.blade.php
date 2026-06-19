@@ -82,9 +82,7 @@
                                     <div class="truncate text-base font-bold text-white">{{ $veiculo->modelo }}</div>
                                     <div class="text-sm text-slate-300">{{ $veiculo->marca }} • {{ $veiculo->ano }} • {{ $veiculo->placa }}</div>
                                 </div>
-                                <span class="rounded-full px-3 py-1 text-xs font-semibold {{ $veiculo->status === 'disponivel' ? 'bg-emerald-400/15 text-emerald-200' : ($veiculo->status === 'alugado' ? 'bg-sky-400/15 text-sky-200' : 'bg-amber-400/15 text-amber-200') }}">
-                                    {{ ucfirst($veiculo->status) }}
-                                </span>
+                                <x-veiculo-status :veiculo="$veiculo" />
                             </a>
                         @empty
                             <p class="text-sm text-slate-400">Nenhum veículo cadastrado ainda.</p>

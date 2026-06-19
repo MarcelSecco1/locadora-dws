@@ -6,7 +6,6 @@ use App\Http\Requests\LocacaoRequest;
 use App\Models\Locacao;
 use App\Models\Veiculo;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class LocacaoController extends Controller
@@ -30,7 +29,8 @@ class LocacaoController extends Controller
         return view('locacoes.create', [
             'locacao' => new Locacao(),
             'veiculos' => Veiculo::query()
-                ->where('status', 'disponivel')
+                ->with('locacoes')
+                ->where('status', '!=', 'manutencao')
                 ->orderBy('modelo')
                 ->get(),
         ]);
@@ -38,20 +38,7 @@ class LocacaoController extends Controller
 
     public function store(LocacaoRequest $request): RedirectResponse
     {
-        $data = $request->validated();
-        $veiculo = Veiculo::query()->findOrFail($data['veiculo_id']);
-
-        abort_if($veiculo->status !== 'disponivel', 422, 'Selecione um veículo disponível.');
-
-        $locacao = DB::transaction(function () use ($data) {
-            $locacao = Locacao::create($data);
-
-            Veiculo::whereKey($data['veiculo_id'])->update([
-                'status' => 'alugado',
-            ]);
-
-            return $locacao;
-        });
+        $locacao = Locacao::create($request->validated());
 
         return redirect()
             ->route('locacoes.show', $locacao)
@@ -63,9 +50,10 @@ class LocacaoController extends Controller
         return view('locacoes.edit', [
             'locacao' => $locacao,
             'veiculos' => Veiculo::query()
+                ->with('locacoes')
                 ->where(function ($query) use ($locacao) {
                     $query
-                        ->where('status', 'disponivel')
+                        ->where('status', '!=', 'manutencao')
                         ->orWhere('id', $locacao->veiculo_id);
                 })
                 ->orderBy('modelo')
@@ -75,21 +63,7 @@ class LocacaoController extends Controller
 
     public function update(LocacaoRequest $request, Locacao $locacao): RedirectResponse
     {
-        $data = $request->validated();
-        $oldVeiculoId = $locacao->veiculo_id;
-        $veiculoSelecionado = Veiculo::query()->findOrFail($data['veiculo_id']);
-
-        abort_if($veiculoSelecionado->status !== 'disponivel' && (int) $oldVeiculoId !== (int) $veiculoSelecionado->id, 422, 'Selecione um veículo disponível.');
-
-        DB::transaction(function () use ($locacao, $data, $oldVeiculoId) {
-            $locacao->update($data);
-
-            if ((int) $oldVeiculoId !== (int) $data['veiculo_id']) {
-                Veiculo::whereKey($oldVeiculoId)->update(['status' => 'disponivel']);
-            }
-
-            Veiculo::whereKey($data['veiculo_id'])->update(['status' => 'alugado']);
-        });
+        $locacao->update($request->validated());
 
         return redirect()
             ->route('locacoes.show', $locacao)
@@ -98,10 +72,7 @@ class LocacaoController extends Controller
 
     public function destroy(Locacao $locacao): RedirectResponse
     {
-        $veiculoId = $locacao->veiculo_id;
         $locacao->delete();
-
-        Veiculo::whereKey($veiculoId)->update(['status' => 'disponivel']);
 
         return redirect()
             ->route('locacoes.index')

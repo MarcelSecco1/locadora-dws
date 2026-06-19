@@ -44,9 +44,7 @@
                             <td class="px-4 py-4 text-slate-200">{{ $veiculo->ano }}</td>
                             <td class="px-4 py-4 text-slate-200">{{ $veiculo->placa }}</td>
                             <td class="px-4 py-4">
-                                <span class="rounded-full px-3 py-1 text-xs font-semibold {{ $veiculo->status === 'disponivel' ? 'bg-emerald-400/15 text-emerald-200' : ($veiculo->status === 'alugado' ? 'bg-sky-400/15 text-sky-200' : 'bg-amber-400/15 text-amber-200') }}">
-                                    {{ ucfirst($veiculo->status) }}
-                                </span>
+                                <x-veiculo-status :veiculo="$veiculo" />
                             </td>
                             <td class="px-4 py-4">
                                 <div class="flex flex-wrap gap-2">

@@ -26,9 +26,7 @@
             <div class="space-y-4 p-6">
                 <div class="flex items-center justify-between">
                     <div class="text-sm uppercase tracking-[0.3em] text-slate-400">Status</div>
-                    <span class="rounded-full px-3 py-1 text-xs font-semibold {{ $veiculo->status === 'disponivel' ? 'bg-emerald-400/15 text-emerald-200' : ($veiculo->status === 'alugado' ? 'bg-sky-400/15 text-sky-200' : 'bg-amber-400/15 text-amber-200') }}">
-                        {{ ucfirst($veiculo->status) }}
-                    </span>
+                    <x-veiculo-status :veiculo="$veiculo" />
                 </div>
                 <dl class="grid grid-cols-2 gap-4 text-sm">
                     <div class="rounded-2xl border border-white/10 bg-white/5 p-4">

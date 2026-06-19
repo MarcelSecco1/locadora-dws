@@ -13,7 +13,7 @@ class VeiculoController extends Controller
     public function index(): View
     {
         return view('veiculos.index', [
-            'veiculos' => Veiculo::query()->latest()->paginate(8),
+            'veiculos' => Veiculo::query()->with('locacoes')->latest()->paginate(8),
         ]);
     }
 
@@ -89,7 +89,6 @@ class VeiculoController extends Controller
     {
         return [
             'disponivel' => 'Disponível',
-            'alugado' => 'Alugado',
             'manutencao' => 'Manutenção',
         ];
     }

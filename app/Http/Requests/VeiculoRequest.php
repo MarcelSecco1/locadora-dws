@@ -27,7 +27,7 @@ class VeiculoRequest extends FormRequest
                 'max:20',
                 Rule::unique(Veiculo::class, 'placa')->ignore($veiculo?->id),
             ],
-            'status' => ['required', Rule::in(['disponivel', 'alugado', 'manutencao'])],
+            'status' => ['required', Rule::in(['disponivel', 'manutencao'])],
             'imagem' => [
                 Rule::requiredIf($this->isMethod('post')),
                 'image',

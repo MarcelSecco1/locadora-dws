@@ -11,26 +11,28 @@ use Illuminate\Support\Facades\Schema;
 Route::get('/', function () {
     $hasVeiculosTable = Schema::hasTable('veiculos');
     $hasLocacoesTable = Schema::hasTable('locacoes');
+    $today = today();
 
     return view('welcome', [
-        'veiculos' => $hasVeiculosTable ? Veiculo::query()->latest()->take(4)->get() : collect(),
+        'veiculos' => $hasVeiculosTable ? Veiculo::query()->with('locacoes')->latest()->take(4)->get() : collect(),
         'locacoes' => $hasLocacoesTable ? Locacao::query()->with('veiculo')->latest()->take(4)->get() : collect(),
         'veiculosCount' => $hasVeiculosTable ? Veiculo::count() : 0,
         'locacoesCount' => $hasLocacoesTable ? Locacao::count() : 0,
-        'disponiveisCount' => $hasVeiculosTable ? Veiculo::where('status', 'disponivel')->count() : 0,
+        'disponiveisCount' => $hasVeiculosTable ? Veiculo::disponiveisEm($today)->count() : 0,
     ]);
 });
 
 Route::get('/dashboard', function () {
     $hasVeiculosTable = Schema::hasTable('veiculos');
     $hasLocacoesTable = Schema::hasTable('locacoes');
+    $today = today();
 
     return view('dashboard', [
         'veiculosCount' => $hasVeiculosTable ? Veiculo::count() : 0,
         'locacoesCount' => $hasLocacoesTable ? Locacao::count() : 0,
-        'disponiveisCount' => $hasVeiculosTable ? Veiculo::where('status', 'disponivel')->count() : 0,
-        'alugadosCount' => $hasVeiculosTable ? Veiculo::where('status', 'alugado')->count() : 0,
-        'recentesVeiculos' => $hasVeiculosTable ? Veiculo::query()->latest()->take(6)->get() : collect(),
+        'disponiveisCount' => $hasVeiculosTable ? Veiculo::disponiveisEm($today)->count() : 0,
+        'alugadosCount' => $hasVeiculosTable ? Veiculo::alugadosEm($today)->count() : 0,
+        'recentesVeiculos' => $hasVeiculosTable ? Veiculo::query()->with('locacoes')->latest()->take(6)->get() : collect(),
         'recentesLocacoes' => $hasLocacoesTable ? Locacao::query()->with('veiculo')->latest()->take(6)->get() : collect(),
     ]);
 })->middleware(['auth', 'permission:acessar dashboard'])->name('dashboard');
