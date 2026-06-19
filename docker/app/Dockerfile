@@ -22,6 +22,8 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 RUN ln -sf /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
     && ln -sf /usr/local/lib/node_modules/npm/bin/npx-cli.js /usr/local/bin/npx
 
+RUN mkdir -p /var/www/html/public/build
+
 COPY composer.json composer.lock package.json package-lock.json ./
 RUN composer install --no-interaction --prefer-dist --optimize-autoloader --no-scripts
 RUN npm install
