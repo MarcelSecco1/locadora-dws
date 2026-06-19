@@ -31,7 +31,7 @@ class VeiculoRequest extends FormRequest
             'imagem' => [
                 Rule::requiredIf($this->isMethod('post')),
                 'image',
-                'max:2048',
+                'max:10240',
             ],
         ];
     }

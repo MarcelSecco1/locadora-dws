@@ -13,6 +13,8 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install pdo_mysql mbstring intl zip \
     && rm -rf /var/lib/apt/lists/*
 
+COPY docker/app/uploads.ini /usr/local/etc/php/conf.d/uploads.ini
+
 COPY --from=node:22-bookworm /usr/local/bin/node /usr/local/bin/node
 COPY --from=node:22-bookworm /usr/local/bin/npm /usr/local/bin/npm
 COPY --from=node:22-bookworm /usr/local/bin/npx /usr/local/bin/npx
